@@ -1,17 +1,26 @@
+
 package com.example;
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
+import org.testng.annotations.Test;
 
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 
 public class AppTestGet {
-    public void getExample() {
+
+    @Test
+    public void testGetUser() {
+        RestAssured.baseURI = "https://jsonplaceholder.typicode.com";
+
         given()
-            .baseUri("https://jsonplaceholder.typicode.com")
+            .log().all()
         .when()
-            .get("/posts/1")
+            .get("/users/1")   // valid endpoint
         .then()
-            .statusCode(200)
-            .body("userId", equalTo(1))
-            .log().all();
+            .log().all()
+            .statusCode(200)   // JSONPlaceholder always returns 200 for valid resources
+            .body("id", equalTo(1))
+            .body("username", notNullValue());
     }
 }
